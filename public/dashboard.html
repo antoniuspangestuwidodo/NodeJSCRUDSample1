@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <script>
+    // Check token for protected page
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please login first!');
+      window.location.href = '/login.html';
+    }
+  </script>
+  <script src="script.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="p-5">
+  <h1 class="text-2xl font-bold mb-4">Welcome to Dashboard</h1>
+  <p class="mb-4">You are logged in.</p>
+  <button onclick="logout()" class="bg-red-500 text-white px-3 py-1 rounded">Logout</button>
+  <script>
+    function logout() {
+  localStorage.removeItem('token');
+  window.location.href = '/index.html';
+}
+
+  </script>
+</body>
+</html>

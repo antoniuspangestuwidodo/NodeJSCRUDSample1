@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - CRUD App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-sm bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">🔐 Login</h2>
+
+    <div id="alert" class="hidden mb-4 p-3 rounded text-sm font-medium"></div>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="username" required class="mt-1 block w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="password" required class="mt-1 block w-full border px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300" />
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
+        Login
+      </button>
+    </form>
+    <p class="text-sm mt-4 text-center">
+      Do not have account yet? <a href="register.html" class="text-blue-600 hover:underline">Register here</a>
+    </p>
+
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const alertBox = document.getElementById("alert");
+
+    function showAlert(msg, type = "error") {
+      alertBox.textContent = msg;
+      alertBox.className = `mb-4 p-3 rounded text-sm font-medium ${type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`;
+      alertBox.classList.remove("hidden");
+      setTimeout(() => alertBox.classList.add("hidden"), 3000);
+    }
+
+    loginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const res = await fetch("/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          localStorage.setItem("token", data.token);
+          window.location.href = "/index.html";
+        } else {
+          showAlert("Login failed: " + (data.message || "Invalid credentials"));
+        }
+      } catch (err) {
+        showAlert("Error during login");
+        console.error(err);
+      }
+    };
+  </script>
+</body>
+</html>
