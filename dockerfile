@@ -1,18 +1,23 @@
-# Base image Node.js
+# Use official Node.js LTS base image
 FROM node:18
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package.json and package-lock.json for dependency installation
 COPY package*.json ./
-RUN npm install
 
-# Copy the rest of the project files
+# Install dependencies
+RUN npm install --production
+
+# Copy all project files to the working directory
 COPY . .
 
-# Expose port
+# Set environment variable to production (optional but recommended)
+ENV NODE_ENV=production
+
+# Expose the port your app runs on
 EXPOSE 3000
 
-# Run the app
+# Start the server
 CMD ["node", "server.js"]
